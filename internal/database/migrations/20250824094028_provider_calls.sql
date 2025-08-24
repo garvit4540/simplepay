@@ -1,19 +1,13 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE provider_calls (
+CREATE TABLE IF NOT EXISTS provider_calls (
     id VARCHAR(10) PRIMARY KEY,
     payment_id VARCHAR(10) NOT NULL,
-    provider_request JSON,
-    provider_response JSON
+    provider_request TEXT,
+    provider_response TEXT,
+    INDEX idx_provider_calls_id (id),
+    INDEX idx_provider_calls_payment_id (payment_id)
 );
--- +goose StatementEnd
-
--- +goose StatementBegin
-CREATE INDEX idx_provider_calls_id ON provider_calls(id);
--- +goose StatementEnd
-
--- +goose StatementBegin
-CREATE INDEX idx_provider_calls_payment_id ON provider_calls(payment_id);
 -- +goose StatementEnd
 
 -- +goose Down

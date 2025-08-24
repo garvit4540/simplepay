@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
     id VARCHAR(10) PRIMARY KEY,
     order_id VARCHAR(10) NOT NULL,
     merchant_id VARCHAR(10) NOT NULL,
@@ -9,24 +9,12 @@ CREATE TABLE payments (
     status VARCHAR(20) NOT NULL,
     provider_id VARCHAR(10) NOT NULL,
     forced_provider VARCHAR(10),
-    terminal_id VARCHAR(10)
+    terminal_id VARCHAR(10),
+    INDEX idx_payments_id (id),
+    INDEX idx_payments_order_id (order_id),
+    INDEX idx_payments_merchant_id (merchant_id),
+    INDEX idx_payments_provider_id (provider_id)
 );
--- +goose StatementEnd
-
--- +goose StatementBegin
-CREATE INDEX idx_payments_id ON payments(id);
--- +goose StatementEnd
-
--- +goose StatementBegin
-CREATE INDEX idx_payments_order_id ON payments(order_id);
--- +goose StatementEnd
-
--- +goose StatementBegin
-CREATE INDEX idx_payments_merchant_id ON payments(merchant_id);
--- +goose StatementEnd
-
--- +goose StatementBegin
-CREATE INDEX idx_payments_provider_id ON payments(provider_id);
 -- +goose StatementEnd
 
 -- +goose Down
