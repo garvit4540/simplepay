@@ -182,4 +182,21 @@ curl --location 'http://localhost:8080/payments' \
 }'
 ```
 
+## Additional Features to Build
+
+1. **Dynamic Currency Handling**
+  - Currently, the system supports a fixed currency per payment.
+  - Future improvement: allow multiple currencies, handle conversions, and ensure proper validations for cross-currency payments.
+
+2. **Terminal Prioritization Across Providers**
+  - Each merchant can have multiple terminals, one per provider.
+  - Implement a preference-based sorting algorithm to select the optimal terminal for a payment request.
+
+3. **Asynchronous Reconciliation and Settlement Flows**
+  - Introduce background jobs to handle:
+    - Payment reconciliation across multiple providers.
+    - Settlement flows for completed transactions.
+  - This will improve scalability and reduce blocking during payment processing.
+
+
 
