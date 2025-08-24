@@ -28,7 +28,7 @@ func (svc *OrdersService) ValidateOrder(ctx *gin.Context, order *OrderModel) err
 	if order.MerchantID == "" {
 		return fmt.Errorf("merchant_id is required")
 	}
-	
+
 	if order.Currency == "" {
 		return fmt.Errorf("currency is required")
 	}
@@ -48,4 +48,13 @@ func (svc *OrdersService) CreateOrder(order *OrderModel) error {
 	}
 
 	return nil
+}
+
+func (svc *OrdersService) GetOrderById(orderId string) (*OrderModel, error) {
+	order, err := svc.repo.GetOrderByID(orderId)
+	if err != nil {
+		return nil, fmt.Errorf("order creation failed - %v", err)
+	}
+
+	return order, nil
 }
