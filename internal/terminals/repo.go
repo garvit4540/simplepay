@@ -45,3 +45,40 @@ func (tr *TerminalRepo) CreateTerminal(terminal *TerminalModel) error {
 	terminal.UpdatedAt = now
 	return nil
 }
+
+func (tr *TerminalRepo) GetTerminalsByMerchantID(merchantID string) ([]*TerminalModel, error) {
+	query := `
+		SELECT id, merchant_id, provider_id, created_at, updated_at, deleted_at
+		FROM terminals
+		WHERE merchant_id = ?
+	`
+
+	rows, err := tr.db.Query(query, merchantID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query terminals: %w", err)
+	}
+	defer rows.Close()
+
+	var terminals []*TerminalModel
+	for rows.Next() {
+		terminal := &TerminalModel{}
+		err := rows.Scan(
+			&terminal.ID,
+			&terminal.MerchantId,
+			&terminal.ProviderId,
+			&terminal.CreatedAt,
+			&terminal.UpdatedAt,
+			&terminal.DeletedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan terminal: %w", err)
+		}
+		terminals = append(terminals, terminal)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, fmt.Errorf("error iterating terminals: %w", err)
+	}
+
+	return terminals, nil
+}

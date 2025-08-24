@@ -3,21 +3,21 @@ package payments
 import (
 	"fmt"
 	"github.com/garvit4540/simplepay/internal/orders"
+	"github.com/garvit4540/simplepay/internal/registry"
 	"github.com/gin-gonic/gin"
 )
 
 const PaymentCreated string = "created"
 const PaymentCompleted string = "completed"
+const PaymentFailed string = "failed"
 
 type PaymentsService struct {
-	repo       *PaymentsRepo
-	ordersRepo *orders.OrdersRepo
+	repo *PaymentsRepo
 }
 
-func NewPaymentsService(repo *PaymentsRepo, ordersRepo *orders.OrdersRepo) *PaymentsService {
+func NewPaymentsService(repo *PaymentsRepo) *PaymentsService {
 	return &PaymentsService{
-		repo:       repo,
-		ordersRepo: ordersRepo,
+		repo: repo,
 	}
 }
 
@@ -42,7 +42,12 @@ func (svc *PaymentsService) ValidatePayment(ctx *gin.Context, payment *PaymentMo
 	}
 
 	// Fetch the order and check its status
-	order, err := svc.ordersRepo.GetOrderByID(payment.OrderID)
+	service := registry.GetServiceFromRegister(registry.OrdersService)
+	orderService, ok := service.(*orders.OrdersService)
+	if !ok {
+		return fmt.Errorf("failed to fetch orders service")
+	}
+	order, err := orderService.GetOrderById(payment.OrderID)
 	if err != nil {
 		return fmt.Errorf("failed to fetch order: %v", err)
 	}
@@ -59,6 +64,7 @@ func (svc *PaymentsService) CreatePayment(payment *PaymentModel) error {
 	if err != nil {
 		return fmt.Errorf("payment creation failed - %v", err)
 	}
+
 	return nil
 }
 

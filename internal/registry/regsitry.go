@@ -5,6 +5,7 @@ const MerchantService string = "merchant_service"
 const KeysService string = "keys_service"
 const TerminalService string = "terminal_service"
 const OrdersService string = "orders_service"
+const PaymentsService string = "payments_service"
 
 var serviceRegister map[string]interface{}
 

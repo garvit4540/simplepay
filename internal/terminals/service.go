@@ -45,3 +45,12 @@ func (svc *TerminalService) CreateTerminalForMerchant(merchantId string) error {
 
 	return nil
 }
+
+func (svc *TerminalService) GetTerminalsForMerchant(merchantID string) ([]*TerminalModel, error) {
+	terminals, err := svc.repo.GetTerminalsByMerchantID(merchantID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch terminals for merchant %v - %w", merchantID, err)
+	}
+
+	return terminals, nil
+}
