@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS merchants (
     name VARCHAR(100) NOT NULL,
     category VARCHAR(20) NOT NULL,
     status VARCHAR(20) NOT NULL,
-    details TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     INDEX idx_merchants_id (id)
 );
 -- +goose StatementEnd

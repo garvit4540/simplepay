@@ -7,6 +7,9 @@ CREATE TABLE IF NOT EXISTS orders (
     currency VARCHAR(3) NOT NULL,
     order_details TEXT,
     merchant_id VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
     INDEX idx_orders_id (id),
     INDEX idx_orders_merchant_id (merchant_id)
 );

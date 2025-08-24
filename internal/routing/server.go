@@ -12,4 +12,10 @@ func SetupRouter(r *gin.Engine) {
 	// Payment routes
 	r.POST("/payments", CreatePayment)
 	r.GET("/payments/:id", PaymentStatus)
+
+	// Provider routes
+	r.POST("/provider", CreateProvider)
+
+	// Merchant routes
+	r.POST("/merchants", CreateMerchant)
 }
