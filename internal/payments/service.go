@@ -55,6 +55,11 @@ func (svc *PaymentsService) ValidatePayment(ctx *gin.Context, payment *PaymentMo
 	if order.Status != orders.Created {
 		return fmt.Errorf("payment can only be created for orders in 'created' state")
 	}
+	order.Status = orders.Completed
+	err = orderService.UpdateOrder(order)
+	if err != nil {
+		return fmt.Errorf("failed to update order: %v", err)
+	}
 
 	return nil
 }

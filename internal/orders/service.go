@@ -3,6 +3,7 @@ package orders
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 const Created string = "created"
@@ -57,4 +58,16 @@ func (svc *OrdersService) GetOrderById(orderId string) (*OrderModel, error) {
 	}
 
 	return order, nil
+}
+
+func (svc *OrdersService) UpdateOrder(order *OrderModel) error {
+	now := time.Now()
+	order.UpdatedAt = now
+
+	err := svc.repo.UpdateOrder(order)
+	if err != nil {
+		return fmt.Errorf("failed to update order - %v", err)
+	}
+
+	return nil
 }

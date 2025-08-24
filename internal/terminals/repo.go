@@ -60,6 +60,7 @@ func (tr *TerminalRepo) GetTerminalsByMerchantID(merchantID string) ([]*Terminal
 	defer rows.Close()
 
 	var terminals []*TerminalModel
+	var deletedAt sql.NullTime
 	for rows.Next() {
 		terminal := &TerminalModel{}
 		err := rows.Scan(
@@ -68,10 +69,13 @@ func (tr *TerminalRepo) GetTerminalsByMerchantID(merchantID string) ([]*Terminal
 			&terminal.ProviderId,
 			&terminal.CreatedAt,
 			&terminal.UpdatedAt,
-			&terminal.DeletedAt,
+			&deletedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan terminal: %w", err)
+		}
+		if deletedAt.Valid {
+			terminal.DeletedAt = deletedAt.Time
 		}
 		terminals = append(terminals, terminal)
 	}
@@ -79,6 +83,5 @@ func (tr *TerminalRepo) GetTerminalsByMerchantID(merchantID string) ([]*Terminal
 	if err = rows.Err(); err != nil {
 		return nil, fmt.Errorf("error iterating terminals: %w", err)
 	}
-
 	return terminals, nil
 }

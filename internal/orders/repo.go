@@ -55,6 +55,7 @@ func (or *OrdersRepo) GetOrderByID(orderID string) (*OrderModel, error) {
 	`
 
 	order := &OrderModel{}
+	var deletedAt sql.NullTime
 	err := or.repo.QueryRow(query, orderID).Scan(
 		&order.ID,
 		&order.Amount,
@@ -64,7 +65,7 @@ func (or *OrdersRepo) GetOrderByID(orderID string) (*OrderModel, error) {
 		&order.MerchantID,
 		&order.CreatedAt,
 		&order.UpdatedAt,
-		&order.DeletedAt,
+		&deletedAt,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -73,5 +74,30 @@ func (or *OrdersRepo) GetOrderByID(orderID string) (*OrderModel, error) {
 		return nil, fmt.Errorf("failed to fetch order: %w", err)
 	}
 
+	if deletedAt.Valid {
+		order.DeletedAt = deletedAt.Time
+	}
 	return order, nil
+}
+
+func (or *OrdersRepo) UpdateOrder(order *OrderModel) error {
+	query := `
+		UPDATE orders
+		SET amount = ?, status = ?, currency = ?, order_details = ?, updated_at = ?
+		WHERE id = ?
+	`
+
+	_, err := or.repo.Exec(query,
+		order.Amount,
+		order.Status,
+		order.Currency,
+		order.OrderDetails,
+		order.UpdatedAt,
+		order.ID,
+	)
+	if err != nil {
+		return fmt.Errorf("failed to update order: %w", err)
+	}
+
+	return nil
 }

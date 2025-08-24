@@ -114,22 +114,27 @@ func CreatePayment(c *gin.Context) {
 		return
 	}
 
-	// Search Terminal for merchant and select provider
-	service = registry.GetServiceFromRegister(registry.TerminalService)
-	terminalsService, ok := service.(*terminals.TerminalService)
-	terminals, err := terminalsService.GetTerminalsForMerchant(payment.MerchantID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch terminals for this merchant - " + err.Error()})
-		return
-	}
-	if len(terminals) == 0 {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "no terminal found for this merchant"})
-		return
+	// If forced provider is present, we will skip terminal selection
+	if payment.ForcedProvider != "" {
+		payment.ProviderID = payment.ForcedProvider
+	} else {
+		// Search Terminal for merchant and select provider
+		service = registry.GetServiceFromRegister(registry.TerminalService)
+		terminalsService, _ := service.(*terminals.TerminalService)
+		terminals, err := terminalsService.GetTerminalsForMerchant(payment.MerchantID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch terminals for this merchant - " + err.Error()})
+			return
+		}
+		if len(terminals) == 0 {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "no terminal found for this merchant"})
+			return
+		}
+		payment.TerminalID = terminals[0].ID
+		payment.ProviderID = terminals[0].ProviderId
 	}
 
-	payment.TerminalID = terminals[0].ID
-	payment.ProviderID = terminals[0].ProviderId
-
+	var err error
 	service = registry.GetServiceFromRegister(registry.ProviderService)
 	providerService, ok := service.(*providerfactory.ProviderService)
 	err = providerService.ProcessPaymentWithProvider(&payment)
