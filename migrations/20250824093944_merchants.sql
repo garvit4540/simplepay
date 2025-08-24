@@ -7,9 +7,6 @@ CREATE TABLE merchants (
     status VARCHAR(20) NOT NULL,
     details JSON
 );
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_merchants_id ON merchants(id);
 -- +goose StatementEnd
 

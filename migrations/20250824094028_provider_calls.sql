@@ -6,13 +6,7 @@ CREATE TABLE provider_calls (
     provider_request JSON,
     provider_response JSON
 );
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_provider_calls_id ON provider_calls(id);
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_provider_calls_payment_id ON provider_calls(payment_id);
 -- +goose StatementEnd
 

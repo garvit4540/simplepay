@@ -5,13 +5,7 @@ CREATE TABLE keys (
     merchant_id VARCHAR(10) NOT NULL,
     key VARCHAR(10) NOT NULL
 );
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_keys_id ON keys(id);
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_keys_merchant_id ON keys(merchant_id);
 -- +goose StatementEnd
 

@@ -8,13 +8,7 @@ CREATE TABLE orders (
     order_details JSON,
     merchant_id VARCHAR(10) NOT NULL
 );
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_orders_id ON orders(id);
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_orders_merchant_id ON orders(merchant_id);
 -- +goose StatementEnd
 

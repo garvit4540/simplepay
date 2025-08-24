@@ -2,8 +2,10 @@ package database
 
 import (
 	"fmt"
-	"github.com/pressly/goose"
 	"log"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/pressly/goose"
 )
 
 func RunMigrations() error {
@@ -12,7 +14,7 @@ func RunMigrations() error {
 		return fmt.Errorf("failed to covert gorm client to sql client")
 	}
 
-	if err := goose.Up(db, "./internal/database/migrations"); err != nil {
+	if err := goose.Up(db, "internal/database/migrations"); err != nil {
 		log.Fatalf("failed to run migrations: %v", err)
 	}
 

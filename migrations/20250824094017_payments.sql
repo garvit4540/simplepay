@@ -10,26 +10,14 @@ CREATE TABLE payments (
     provider_id VARCHAR(10) NOT NULL,
     forced_provider VARCHAR(10),
     terminal_id VARCHAR(10)
-);
--- +goose StatementEnd
-
--- +goose StatementBegin
+)
 CREATE INDEX idx_payments_id ON payments(id);
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_payments_order_id ON payments(order_id);
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_payments_merchant_id ON payments(merchant_id);
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_payments_provider_id ON payments(provider_id);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS payments
 -- +goose StatementEnd

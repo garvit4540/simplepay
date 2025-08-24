@@ -4,9 +4,6 @@ CREATE TABLE providers (
    id VARCHAR(10) PRIMARY KEY,
    name VARCHAR(100) NOT NULL
 );
--- +goose StatementEnd
-
--- +goose StatementBegin
 CREATE INDEX idx_providers_id ON providers(id);
 -- +goose StatementEnd
 
