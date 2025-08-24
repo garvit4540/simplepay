@@ -5,13 +5,15 @@ import (
 )
 
 func SetupRouter(r *gin.Engine) {
+	// Auth Middleware
+	auth := MerchantAuthMiddleware()
+
 	// Order routes
-	r.POST("/orders", CreateOrder)
-	r.GET("/orders/:id", OrderStatus)
+	r.POST("/orders", auth, CreateOrder)
 
 	// Payment routes
-	r.POST("/payments", CreatePayment)
-	r.GET("/payments/:id", PaymentStatus)
+	r.POST("/payments", auth, CreatePayment)
+	r.GET("/payments/:id", auth, GetPayment)
 
 	// Provider routes
 	r.POST("/provider", CreateProvider)

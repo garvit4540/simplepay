@@ -5,6 +5,7 @@ import (
 	"github.com/garvit4540/simplepay/internal/database"
 	"github.com/garvit4540/simplepay/internal/keys"
 	"github.com/garvit4540/simplepay/internal/merchants"
+	"github.com/garvit4540/simplepay/internal/orders"
 	"github.com/garvit4540/simplepay/internal/providerfactory"
 	"github.com/garvit4540/simplepay/internal/registry"
 	"github.com/garvit4540/simplepay/internal/terminals"
@@ -40,6 +41,9 @@ func Initialize() error {
 
 	terminalsClient := terminals.NewTerminalService(terminals.NewTerminalRepo(sqlDb))
 	registry.RegisterService(registry.TerminalService, terminalsClient)
+
+	ordersClient := orders.NewOrdersService(orders.NewOrdersRepo(sqlDb))
+	registry.RegisterService(registry.OrdersService, ordersClient)
 
 	log.Println("Application initialized successfully")
 	return nil
