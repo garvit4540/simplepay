@@ -12,7 +12,7 @@ var DatabaseClient *gorm.DB
 func InitializeDatabase() error {
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
-		dsn = "simplepay_user:12345678@tcp(127.0.0.1:3306)/simplepay?charset=utf8mb4&parseTime=True&loc=Local"
+		log.Printf("❌ Failed to Load DSN from env file")
 	}
 
 	// Open connection using GORM

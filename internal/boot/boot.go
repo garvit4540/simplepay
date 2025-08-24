@@ -21,6 +21,16 @@ func Initialize() error {
 }
 
 // Cleanup performs cleanup operations
-func Cleanup() {
+func Cleanup() error {
+	sqlDB, err := database.DatabaseClient.DB()
+	if err != nil {
+		return fmt.Errorf("failed to convert gorm db to sql db client with err : %w", err)
+	}
+	
+	err = sqlDB.Close()
+	if err != nil {
+		return fmt.Errorf("failed to close sql db connection with err : %w", err)
+	}
 
+	return nil
 }

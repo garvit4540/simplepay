@@ -1,26 +1,46 @@
 package main
 
 import (
+	"github.com/garvit4540/simplepay/internal/routing"
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
+	"time"
 
 	"github.com/garvit4540/simplepay/internal/boot"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	_ = godotenv.Load(".env")
+
 	if err := boot.Initialize(); err != nil {
 		log.Fatalf("Failed to initialize application: %v", err)
 	}
-	defer boot.Cleanup()
+	defer clean()
 
-	// Setting up signal handling for graceful shut down
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	r := gin.Default()
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+	routing.SetupRouter(r)
 
-	log.Println("Application started. Press Ctrl+C to stop.")
+	port := os.Getenv("PORT")
+	if err := r.Run(":" + port); err != nil {
+		log.Fatalf("Server failed to start on port : %s", port)
+	}
+	log.Printf("Server running on port %s", port)
+}
 
-	<-sigChan
-	log.Println("Shutting down gracefully...")
+func clean() {
+	err := boot.Cleanup()
+	if err != nil {
+		log.Fatalf("Failed to gracefully close application: %v", err)
+	}
 }
