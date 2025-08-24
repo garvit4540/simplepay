@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/garvit4540/simplepay/internal/routing"
 	"log"
 	"os"
 	"time"
+
+	"github.com/garvit4540/simplepay/internal/routing"
 
 	"github.com/garvit4540/simplepay/internal/boot"
 	"github.com/gin-contrib/cors"
